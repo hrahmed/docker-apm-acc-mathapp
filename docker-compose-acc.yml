@@ -1,0 +1,12 @@
+#
+# Description:
+# ------------
+#
+# This is a small test case that creates an ACC Config Server.
+#
+
+configserver:
+  image: "apm-configserver:10.2"
+  ports:
+    - "8443:8443"
+    - "8888:8888"

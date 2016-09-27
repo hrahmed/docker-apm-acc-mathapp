@@ -1,0 +1,10 @@
+introscope*otherUnix.jar
+osgiPackages.v*unix.tar
+introscope*.tar
+*.jar
+*.tar
+*.war
+license.lic
+addons/*
+.DS_Store
+/transfer

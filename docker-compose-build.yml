@@ -1,0 +1,31 @@
+#
+# Description:
+# ------------
+#
+# This is a small test case that creates an enterprise manager with its database,
+# a webview.
+#
+
+em:
+  build: enterprise-manager
+  links:
+    - db:db
+  ports:
+    - "5001:5001"
+    - "8081:8081"
+  environment:
+    - HEAP="2048m"
+  volumes:
+#    - ~/mm:/root/Introscope/config/modules
+    - ~/git/docker-introscope/transfer/xmltv:/transfer/xmltv
+    - ~/git/docker-introscope/transfer/modules:/transfer/modules
+
+db:
+  build: database
+
+webview:
+  build: webview
+  links:
+    - em:em
+  ports:
+    - "8082:8080"

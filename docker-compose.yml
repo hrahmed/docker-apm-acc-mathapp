@@ -1,0 +1,45 @@
+#
+# Description:
+# ------------
+#
+# This is a small test case that creates an enterprise manager with its database,
+# a webview, and ACC Config Server.
+#
+
+manager:
+  image: apm-em:10.3
+  links:
+    - db:db
+  ports:
+    - "5001:5001"
+    - "8081:8081"
+  environment:
+    - HEAP="2048m"
+  volumes:
+#    - ~/mm:/root/Introscope/config/modules
+    - ~/git/docker-introscope/transfer/xmltv:/transfer/xmltv
+    - ~/git/docker-introscope/transfer/modules:/transfer/modules
+
+db:
+  image: apm-postgres:10.3
+
+webview:
+  image: apm-webview:10.3
+  links:
+    - manager:manager
+  ports:
+    - "8082:8080"
+
+configserver:
+  image: "apm-configserver:10.2"
+  ports:
+    - "8443:8443"
+    - "8888:8888"
+
+mathappjava:
+  image: mathapp-java:1.0
+  links:
+    - manager:manager
+    - configserver:configserver
+  ports:
+    - "8999:8080"
