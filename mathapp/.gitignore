@@ -1,1 +1,8 @@
-EPAgent*unix.tar
+*.tar
+*.war
+
+# Maven
+target/
+
+# Mac
+.DS_Store

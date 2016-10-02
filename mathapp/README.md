@@ -1,78 +1,79 @@
-#### mathapp-java
-There are 4 java Applications in MathApp:
-- MathClient - web client
-- MathProxy - Jersey RestFul API proxy
-- MathSimpleBackend - Axis2 SOAP Backend
-- MathComplexBackend - Axis2 SOAP Backend
+# MathApp for Docker
 
-MathClient calls MathProxy
-MathProxy calls MathSimpleBackend
-MathProxy calls MathComplexBackend
-MathProxy also calls a .Net backend if using the "mathdotnet" RestFul API.
+# Description
+Run MathApp demo application in Docker container.
 
-### Tested Environments
-Tomcat 6 & 7
+## Short Description
+Run MathApp demo application in Docker container.
 
-### Configuration:
-## MathApp Port Configuration:
-- MathClient --> MathProxy, MathProxy host/port configuration is in math.properties found in the "MathClient/WEB-INF/classes"
-- MathProxy --> MathSimpleBackend, MathComplexBackend, .NetBackend. The host/port configuration is in math.properties found in the "MathProxy/WEB-INF/classes"
+## APM version
+Tested with APM 10.3.
 
-## To download project:
-git clone https://github.com/hrahmed/mathapp-java.git
+## Supported third party versions
+n/a
 
-## Build all projects:
-In main directory
-mvn clean install
+## Limitations
+n/a
 
-## Build for each project:
-Example:
-cd MathClient
-mvn clean install
+## License
+[Apache License 2.0](LICENSE)
 
-cd MathProxy
-mvn clean install
+# Installation Instructions
 
-cd MathSimpleBackend
-mvn clean install
+## Prerequisites
+* Clone and build [mathapp-java](https://github.com/hrahmed/mathapp-java), copy the 4 war files to the local directory
+* Download "Introscope Agent Files for Apache Tomcat-No Installer r10.3.0.0" from [CA Support Online](https://support.ca.com) and put `IntroscopeAgentFiles-NoInstaller10.3.0.15tomcat.unix.tar` in the local directory
+* Download and install CA APM Command Center Server 10.3 for Linux or Windows from [CA Support Online](https://support.ca.com) and put copy `acc-controller-package.tar` from the `package` direcory of the ACC server to the local directory
 
-cd MathComplexBackend
-mvn clean install
+## Dependencies
+CA APM 10.3
 
-## Deploy to Tomcat
-Copy MathClient.war, MathProxy.war, MathSimpleBackend.war and MathComplexBackend.war files found in the "%project%/target" directory to the Tomcat webapp directory.  
+## Installation
+To build the Docker image run `./build-image.sh`
 
-Restart Tomcat and goto: http://%host%:%port%/MathClient
+## Configuration
+To run the Docker image run `docker run <parameters> mathapp_tomcat`
 
-## Update Tomcat User Login Information
-Update the tomcat-users.xml file with details in "config/tomcat-users.xml.toAddtoTomcatConfig"
+# Usage Instructions
+The following environment variables can be used from the command line or a Docker orchestration tool:
+- HEAP: assign more heap memory to the Tomcat JVM, e.g. "3072m"
+- EM_HOST: DNS name, IP address or Docker container/service (needs link or same Docker network) of the CA APM Enterprise Manager, e.g. em01.ca.com
+- EM_PORT: port to connect to the CA APM Enterprise Manager (MOM), default: 5001
+- AGENT_NAME: APM agent name, default "MathApp"
+- AGENT_HOSTNAME: is used as the agent hostname instead of the Docker container id, e.g. mathapp_tomcat01
+- ACC_ENABLED: enable CA APM Command Center controller agent, default: true
+- ACC_CS: url of the CA APM Command Center Configuration Server, e.g. http://accdemowin01.ca.com:8889
 
-### Useful URLs:
-MathClient WebApp: http://%host%:%port%/MathClient
-# Login with:
-Login: user
-Password: math
+You can use the included `baseline.sh` and `stoptest.sh` to create load and stop the load. You need [JMeter](http://jmeter.apache.org) installed locally and need to set the path in `baseline.sh`. Additional JMeter scripts that create error scenarios are included in the `scripts` directory.
 
-MathProxy RestAPI's:
-http://localhost:8080/MathProxy/rest/hello
-http://localhost:8080/Jersey-REST-Client/restClient
-http://localhost:8080/Jersey-REST-Client/JerseyApacheClientServlet
-http://localhost:8080/MathProxy/rest/hello/math?operation=add&value1=5&value2=10
-http://localhost:8080/MathProxy/rest/hello/mathcomplex?operation=flush&value1=5&value2=10
-http://localhost:8080/MathProxy/rest/hello/mathcomplex?operation=mean&values=5,10,15
-http://localhost:8080/MathProxy/rest/hello/mathdotnet?operation=add&value1=5&value2=10
-http://localhost:8080/MathProxy/rest/hello/mathdotnet?operation=multiply&value1=5&value2=10
-http://localhost:8080/MathProxy/rest/hello/mathnode?operation=add&value1=5&value2=10
+## Debugging and Troubleshooting
+```
+docker logs
+docker exec -it <container_name> bash
+```
 
-Node Server API:
-http://localhost:8999/api/math/subtract?value1=33&value2=22
-http://localhost:8080/MathProxy/rest/hello/mathnodesimple?operation=sqrt&value1=25&value2=103
+## Support
+This document and associated tools are made available from CA Technologies as examples and provided at no charge as a courtesy to the CA APM Community at large. This resource may require modification for use in your environment. However, please note that this resource is not supported by CA Technologies, and inclusion in this site should not be construed to be an endorsement or recommendation by CA Technologies. These utilities are not covered by the CA Technologies software license agreement and there is no explicit or implied warranty from CA Technologies. They can be used and distributed freely amongst the CA APM Community, but not sold. As such, they are unsupported software, provided as is without warranty of any kind, express or implied, including but not limited to warranties of merchantability and fitness for a particular purpose. CA Technologies does not warrant that this resource will meet your requirements or that the operation of the resource will be uninterrupted or error free or that any defects will be corrected. The use of this resource implies that you understand and agree to the terms listed herein.
+
+Although these utilities are unsupported, please let us know if you have any problems or questions by adding a comment to the CA APM Community Site area where the resource is located, so that the Author(s) may attempt to address the issue or question.
+
+Unless explicitly stated otherwise this extension is only supported on the same platforms as the APM core agent. See [APM Compatibility Guide](http://www.ca.com/us/support/ca-support-online/product-content/status/compatibility-matrix/application-performance-management-compatibility-guide.aspx).
+
+### Support URL
+https://github-isl-01.ca.com/APMSWAT/mathapp-java-docker/issues
+
+# Contributing
+The [CA APM Community](https://communities.ca.com/community/ca-apm) is the primary means of interfacing with other users and with the CA APM product team.  The [developer subcommunity](https://communities.ca.com/community/ca-apm/ca-developer-apm) is where you can learn more about building APM-based assets, find code examples, and ask questions of other developers and the CA APM product team.
+
+If you wish to contribute to this or any other project, please refer to [easy instructions](https://communities.ca.com/docs/DOC-231150910) available on the CA APM Developer Community.
+
+## Categories
+Cloud Examples Virtualization/Containers
 
 
-dotNet API's:
-http://localhost/MathWebService/MathWebService.asmx?WSDL
-http://localhost/MathWebService/MathWebService.asmx
+# Change log
+Changes for each version of the extension.
 
-MathSimpleBackend & MathComplexBackend Axis2 URL:
-http://localhost:8080/MathComplexBackend/axis2-web/
-WSDL's for MathSimpleBackend, MathComplexBackend and mathdotnetcan be found in the MathProxy project directory
+Version | Author | Comment
+--------|--------|--------
+1.0 | Guenter Grossberger | First version of the extension.

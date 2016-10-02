@@ -1,46 +1,43 @@
-FROM tomcat
+FROM tomcat:7-jre8
 
-MAINTAINER haroon.ahmed@ca.com
+MAINTAINER guenter.grossberger@ca.com
 
-ENV WILY_HOME=/usr/local/tomcat/wily
-ENV CATALINA_OPTS=-Xmx2048m
+ENV PROXY_HOST=localhost
+ENV PROXY_PORT=8088
+ENV SIMPLE_HOST=localhost
+ENV SIMPLE_PORT=8088
+ENV COMPLEX_HOST=localhost
+ENV COMPLEX_PORT=8088
+ENV DOTNET_HOST=localhost
+ENV DOTNET_PORT=8088
+ENV NODE_HOST=localhost
+ENV NODE_PORT=8088
 
-ENV ACC_CS=http://accdemowin01.ca.com:8889
+ENV WILY_HOME=$CATALINA_HOME/wily
+ENV INTROSCOPE_VERSION=10.3.0.15
+ENV EM_HOST=manager
+ENV EM_PORT=5001
+ENV AGENT_NAME=MathApp
+ENV HEAP=2048m
+
+# install mathapp application
+COPY MathClient.war MathComplexBackend.war MathProxy.war MathSimpleBackend.war $CATALINA_HOME/webapps/
+COPY tomcat-users.xml $CATALINA_HOME/conf
+
+# install agent
+ADD IntroscopeAgentFiles-NoInstaller${INTROSCOPE_VERSION}tomcat.unix.tar $CATALINA_HOME
+
+# configure CA APM java agent
+COPY setenv.sh $CATALINA_HOME/bin/setenv.sh
+
+# install and configure ACC
+ENV ACC_CS=http://configserver:8888
 ENV ACC_HOME=/root
 ENV ACC_ENABLED=true
 
-# Copy MathApp binaries to Tomcat
-ADD MathClient.war /usr/local/tomcat/webapps/
-ADD MathProxy.war /usr/local/tomcat/webapps/
-ADD MathSimpleBackend.war /usr/local/tomcat/webapps/
-ADD MathComplexBackend.war /usr/local/tomcat/webapps/
+COPY start.sh $ACC_HOME/
+ADD acc-controller-package.tar $ACC_HOME/
 
-# Add and start ACC controller
-ADD acc-controller-package.tar /usr/local
-RUN sed -i -e '/configurationServer.url=/ s/=/= http:\/\/accdemowin01.ca.com:8889/' /usr/local/APMCommandCenterController/config/apmccctrl.properties
+EXPOSE 8088
 
-ADD init_acc-controller.sh /opt/init_acc-controller.sh
-RUN /opt/init_acc-controller.sh
-
-# Add and start APM Agent
-ADD mathapp_v1.tar /usr/local/tomcat
-
-ENV WILY_HOME=/usr/local/tomcat/wily
-ENV CATALINA_OPTS=-Xmx2048m
-
-ADD init_tomcat.sh /opt/init_tomcat.sh
-#ADD init_agent.sh /opt/init_agent.sh
-
-RUN /opt/init_tomcat.sh
-ADD tomcat-users.xml /usr/local/tomcat/conf/tomcat-users.xml
-
-# now add the APM agent
-ENV CATALINA_OPTS="-Xmx2048m -javaagent:$WILY_HOME/Agent.jar -Dcom.wily.introscope.agentProfile=$WILY_HOME/core/config/IntroscopeAgent.profile -Dcom.wily.introscope.agent.agentName=mathapp -DagentManager.url.1=manager:5001 -DnodeHost=192.168.59.3 -DnodePort=8999"
-
-ADD start-tomcat-acc.sh /opt/init/start-tomcat-acc.sh
-
-#RUN /opt/init_agent.sh
-
-EXPOSE 8080
-
-CMD /opt/init/start-tomcat-acc.sh
+CMD ["/root/start.sh"]

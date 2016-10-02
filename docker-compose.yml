@@ -37,9 +37,9 @@ configserver:
     - "8888:8888"
 
 mathappjava:
-  image: mathapp-java:1.0
+  image: mathapp-java
   links:
     - manager:manager
     - configserver:configserver
   ports:
-    - "8999:8080"
+    - "8999:8088"
