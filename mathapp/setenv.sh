@@ -7,8 +7,13 @@ sed -Ei 's/Connector port="8080" protocol="HTTP\/1.1"/Connector port="8088" prot
 sed -Ei "s/agentManager.url.1=/agentManager.url.1=${EM_HOST}:${EM_PORT}/" $WILY_HOME/core/config/IntroscopeAgent.profile
 
 # enable Browser Agent
-sed -Ei 's/introscope.agent.browseragent.excludeURLList=/introscope.agent.browseragent.excludeURLList=\[\"\/MathClient\/login.jsp\",\"\/MathClient\/logout.jsp\"\]/'  $WILY_HOME/core/config/IntroscopeAgent.profile
-sed -Ei 's/introscope.agent.browseragent.geolocation.enabled=false/introscope.agent.browseragent.geolocation.enabled=true/' $WILY_HOME/core/config/IntroscopeAgent.profile
+if [ "${BROWSER_AGENT_ENABLED}" == "true" ] ; then
+  sed -Ei 's/introscope.agent.browseragent.enabled=.*/introscope.agent.browseragent.enabled=true/' $WILY_HOME/core/config/IntroscopeAgent.profile
+  sed -Ei 's/introscope.agent.browseragent.excludeURLList=/introscope.agent.browseragent.excludeURLList=\[\"\/MathClient\/login.jsp\",\"\/MathClient\/logout.jsp\"\]/'  $WILY_HOME/core/config/IntroscopeAgent.profile
+  sed -Ei 's/introscope.agent.browseragent.geolocation.enabled=false/introscope.agent.browseragent.geolocation.enabled=true/' $WILY_HOME/core/config/IntroscopeAgent.profile
+else
+  sed -Ei 's/introscope.agent.browseragent.enabled=.*/introscope.agent.browseragent.enabled=false/' $WILY_HOME/core/config/IntroscopeAgent.profile
+fi
 
 # agent properties
 sed -Ei 's/introscope.agent.deep.instrumentation.level=low/introscope.agent.deep.instrumentation.level=high/' $WILY_HOME/core/config/IntroscopeAgent.profile

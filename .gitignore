@@ -4,6 +4,8 @@ introscope*.tar
 *.jar
 *.tar
 *.war
+*.junk
+
 license.lic
 addons/*
 .DS_Store

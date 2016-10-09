@@ -23,6 +23,10 @@ COPY startup.sh /opt/introscope-install/startup.sh
 COPY SampleResponseFile.Introscope.txt /opt/introscope-install/SampleResponseFile.Introscope.txt
 #COPY addons /opt/introscope-install/addons
 
+# ha - copy EM fix to support end to end APM-AXA integration
+COPY patch/*.jar /opt/introscope-install/patch/
+
+
 # run the installation of WebView
 RUN java -Xmx2048m -jar ${INTROSCOPE_BIN} -f SampleResponseFile.Introscope.txt && \
     chmod +x startup.sh

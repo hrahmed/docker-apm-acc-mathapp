@@ -1,6 +1,6 @@
 *.tar
 *.war
-
+*.backup
 # Maven
 target/
 

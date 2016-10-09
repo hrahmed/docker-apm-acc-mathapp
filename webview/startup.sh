@@ -29,6 +29,9 @@ if [ -n "${HEAP_XMX}" ] ; then
 	sed -i s/Xmx512m/Xmx${HEAP_XMX}/g ${INTROSCOPE_HOME}/Introscope_Webview.lax
 fi
 
+# ha - apply patch before starting
+cp /opt/introscope-install/patch/*.jar ${INTROSCOPE_HOME}/product/webview/plugins/
+
 # give EM time to start up
 sleep 15
 

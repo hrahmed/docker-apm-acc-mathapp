@@ -32,6 +32,8 @@ webview:
 
 configserver:
   image: "apm-configserver:10.2"
+  links:
+    - manager:manager
   ports:
     - "8443:8443"
     - "8888:8888"
