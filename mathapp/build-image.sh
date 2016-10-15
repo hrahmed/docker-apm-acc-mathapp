@@ -40,4 +40,4 @@ unamestr=`uname`
 #fi
 
 echo "Starting the build"
-$sudo docker build -t mathapp-java .
+$sudo docker build -t mathapp-java:1 .

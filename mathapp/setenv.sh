@@ -4,7 +4,7 @@
 sed -Ei 's/Connector port="8080" protocol="HTTP\/1.1"/Connector port="8088" protocol="HTTP\/1.1"/' $CATALINA_HOME/conf/server.xml
 
 # set EM host and port
-sed -Ei "s/agentManager.url.1=/agentManager.url.1=${EM_HOST}:${EM_PORT}/" $WILY_HOME/core/config/IntroscopeAgent.profile
+sed -Ei "s/agentManager.url.1=.*/agentManager.url.1=${EM_HOST}:${EM_PORT}/" $WILY_HOME/core/config/IntroscopeAgent.profile
 
 # enable Browser Agent
 if [ "${BROWSER_AGENT_ENABLED}" == "true" ] ; then

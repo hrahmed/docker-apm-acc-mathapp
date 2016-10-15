@@ -39,7 +39,7 @@ configserver:
     - "8888:8888"
 
 mathappjava:
-  image: mathapp-java
+  image: mathapp-java:1
   links:
     - manager:manager
     - configserver:configserver
